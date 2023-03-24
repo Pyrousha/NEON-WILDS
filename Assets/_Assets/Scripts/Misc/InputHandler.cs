@@ -10,7 +10,12 @@ public class InputHandler : Singleton<InputHandler>
         Jump = 0
     }
 
-    public Vector2 Dir
+    public Vector2 MoveXZ
+    {
+        get;
+        private set;
+    }
+    public float MoveY
     {
         get;
         private set;
@@ -52,9 +57,14 @@ public class InputHandler : Singleton<InputHandler>
     }
 
     //Input functions
-    public void CTX_Move(InputAction.CallbackContext _ctx)
+    public void CTX_MoveXZ(InputAction.CallbackContext _ctx)
     {
-        Dir = _ctx.ReadValue<Vector2>();
+        MoveXZ = _ctx.ReadValue<Vector2>();
+    }
+
+    public void CTX_MoveY(InputAction.CallbackContext _ctx)
+    {
+        MoveY = _ctx.ReadValue<float>();
     }
 
     public void CTX_Look(InputAction.CallbackContext _ctx)

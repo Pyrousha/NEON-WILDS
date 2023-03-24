@@ -6,10 +6,19 @@
             "id": "88b8298e-6df2-4629-9d9a-82a47f22d7fb",
             "actions": [
                 {
-                    "name": "Move",
+                    "name": "MoveXZ",
                     "type": "Value",
                     "id": "2d568c1e-7990-46a8-8975-fbb736d3582c",
                     "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "MoveY",
+                    "type": "Value",
+                    "id": "e2cc14ce-53fc-4eec-a51b-6d1b5fca231d",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -31,6 +40,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Look_Mouse",
+                    "type": "Button",
+                    "id": "f8e8fd34-e1a7-4e13-8c51-74d4aac6b669",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -41,7 +59,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "Move",
+                    "action": "MoveXZ",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -52,7 +70,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
+                    "action": "MoveXZ",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -63,7 +81,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Move",
+                    "action": "MoveXZ",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -74,7 +92,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Move",
+                    "action": "MoveXZ",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -85,7 +103,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Move",
+                    "action": "MoveXZ",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -96,7 +114,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Move",
+                    "action": "MoveXZ",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -107,7 +125,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Move",
+                    "action": "MoveXZ",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -118,7 +136,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Move",
+                    "action": "MoveXZ",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -129,7 +147,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Move",
+                    "action": "MoveXZ",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -140,7 +158,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Move",
+                    "action": "MoveXZ",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -151,7 +169,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "XR",
-                    "action": "Move",
+                    "action": "MoveXZ",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -162,7 +180,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Joystick",
-                    "action": "Move",
+                    "action": "MoveXZ",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -170,6 +188,17 @@
                     "name": "",
                     "id": "f8f93cf8-8787-42e2-88cf-8c21b1008cb0",
                     "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0c9c8de8-ca1a-4ec4-be30-dbb85581a49f",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -190,23 +219,89 @@
                 },
                 {
                     "name": "",
-                    "id": "8c8e490b-c610-4785-884f-f04217b23ca4",
-                    "path": "<Pointer>/delta",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse;Touch",
-                    "action": "Look",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "3e5f5442-8668-4b27-a940-df99bad7e831",
                     "path": "<Joystick>/{Hatswitch}",
                     "interactions": "",
                     "processors": "",
                     "groups": "Joystick",
                     "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "1D Axis",
+                    "id": "4d1f4766-7e04-439d-a0f1-920c623e0911",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveY",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "89a7099f-eb71-4fe0-9503-5f064e0984e7",
+                    "path": "<Keyboard>/v",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveY",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "3fcaa9e0-9b56-40e9-855f-610a421586a3",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveY",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "1D Axis",
+                    "id": "8e52045b-8018-48ec-b463-7d5ba6dc7b46",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveY",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "334585d3-2335-4c07-9f48-b7f8b522de5a",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveY",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "1bc0704c-f8f3-467a-9cfd-040125165b7f",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveY",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "b2e2297e-212d-4fd8-95e7-c1743ad353d5",
+                    "path": "<Pointer>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse;Touch",
+                    "action": "Look_Mouse",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

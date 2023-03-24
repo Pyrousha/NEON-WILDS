@@ -31,7 +31,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &600721968899968289
 MonoBehaviour:
@@ -78,7 +78,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 600721968899968289}
         m_TargetAssemblyTypeName: InputHandler, Assembly-CSharp
-        m_MethodName: CTX_Move
+        m_MethodName: CTX_MoveXZ
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -162,6 +162,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: e7f724cd-67d8-4e1f-9f33-c8507dbf869e
     m_ActionName: Player/Jump[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 600721968899968289}
+        m_TargetAssemblyTypeName: InputHandler, Assembly-CSharp
+        m_MethodName: CTX_MoveY
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: e2cc14ce-53fc-4eec-a51b-6d1b5fca231d
+    m_ActionName: Player/MoveZ[/Keyboard/v,/Keyboard/shift]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
