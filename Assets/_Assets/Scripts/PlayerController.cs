@@ -6,9 +6,12 @@ public class PlayerController : MonoBehaviour
 {
     private Rigidbody rb;
     [Header("Self-References")]
-    [SerializeField] private Transform cameraTransform;
     [SerializeField] private Transform raycastParent;
     [SerializeField] private Animator bodySwingAnim;
+    [SerializeField] private Transform cameraTarget;
+
+    [Header("External References")]
+    [SerializeField] private Transform cameraTransform;
 
     [Header("Parameters")]
     [SerializeField] private float maxSpeed;
@@ -22,7 +25,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float raycastHeight;
     [Space(5)]
     [SerializeField] private float lerpSpeed = 0.5f;
-    [SerializeField] private float gravMagnitudeCutoffForLerp;
+    [SerializeField] private float gravMagnitudeCutoffForLerp_DEBUG;
+    [SerializeField] private float gravMagnitudeCutoffForLerp_Normal;
+    [SerializeField] private bool useDebugLerpCutoff;
 
     [Header("Settings")]
     [SerializeField] private float turnSpeedX;
@@ -52,6 +57,13 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        //Jump
+        if (InputHandler.Instance.Jump.Down)
+        {
+            if (grounded)
+                rb.velocity += transform.up * jumpPower;
+        }
+
         if (inOrbit)
         {
             //Camera Spin horizontal
@@ -60,8 +72,11 @@ public class PlayerController : MonoBehaviour
 
             //Camera Spin vertical
             targVerticalSpin -= turnSpeedY * InputHandler.Instance.Look.y * Time.deltaTime;
-            targVerticalSpin = Mathf.Clamp(targVerticalSpin, -89.9f, 89.9f);
-            cameraTransform.localRotation = Quaternion.Euler(targVerticalSpin, 0, 0);
+            targVerticalSpin = Mathf.Clamp(targVerticalSpin, -80.5f, 80.5f);
+            cameraTarget.localRotation = Quaternion.Euler(targVerticalSpin, 0, 0);
+
+            // //Make actual camera be facing in same direction as target
+            // cameraTransform.rotation = cameraTarget.rotation;
         }
         else
         {
@@ -74,6 +89,16 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.AngleAxis(amountToTurn, transform.right) * transform.rotation;
         }
 
+        cameraTransform.position = cameraTarget.position;
+
+        if (faceCamera)
+        {
+            transform.rotation = Quaternion.LookRotation(cameraTransform.forward, cameraTarget.up);
+            cameraTarget.localRotation = Quaternion.Euler(0, 0, 0);
+        }
+        else
+            cameraTransform.rotation = cameraTarget.rotation;
+
         //Jump
         if (InputHandler.Instance.Jump.Down)
         {
@@ -81,6 +106,8 @@ public class PlayerController : MonoBehaviour
                 rb.velocity += transform.up * jumpPower;
         }
     }
+
+    private bool faceCamera = false;
 
     private Coroutine exitOrbitCoroutine;
     private IEnumerator OnExitOrbit()
@@ -91,33 +118,22 @@ public class PlayerController : MonoBehaviour
         //Wait for body to swing back
         yield return new WaitForSeconds(10f / 60f);
 
-        bool debugRay = false;
+        faceCamera = true;
 
-        //Teleport body to aling to camera now that body is out of view
-        if (debugRay)
-        {
-            Debug.DrawRay(transform.position, transform.forward * 1.6f, new Color(1, 0, 0), 5f);
-            Debug.DrawRay(cameraTransform.position, cameraTransform.forward * 1.5f, new Color(0, 1, 0), 5f);
-        }
+        //Quaternion rot = cameraTransform.rotation;
+        Debug.DrawRay(cameraTransform.position, cameraTransform.forward, Color.red, 5f);
+        Debug.DrawRay(cameraTransform.position, cameraTransform.forward * 0.5f, Color.blue, 5f);
+        Debug.Log("Start spin!");
+        transform.rotation = Quaternion.LookRotation(cameraTransform.forward, cameraTarget.up);
+        Debug.Log("End spin");
+        yield return null;
+        yield return new WaitForFixedUpdate();
 
-        transform.forward = cameraTransform.forward;
+        yield return new WaitForSeconds(10f / 60f);
+        faceCamera = false;
 
-        if (debugRay)
-        {
-            Debug.DrawRay(transform.position, transform.forward * 1.4f, new Color(1, 0.25f, 0), 5f);
-            Debug.DrawRay(cameraTransform.position, cameraTransform.forward * 1.3f, new Color(0, 0, 1), 5f);
-        }
-        //yield return new WaitForSeconds(1f / 60f);
-
-        cameraTransform.localEulerAngles = Vector3.zero;
-
-        if (debugRay)
-        {
-            Debug.DrawRay(transform.position, transform.forward * 1.2f, new Color(1, 1, 0), 5f);
-            Debug.DrawRay(cameraTransform.position, cameraTransform.forward * 1.1f, new Color(0.25f, 0, 1), 5f);
-        }
-
-        yield return new WaitForSeconds(1f / 60f);
+        Debug.DrawRay(transform.position, transform.forward, Color.green, 5f);
+        Debug.DrawRay(transform.position, transform.forward * 0.5f, Color.yellow, 5f);
 
         // Quaternion targRotation = Quaternion.LookRotation(cameraTransform.forward, cameraTransform.up);
         // transform.rotation = targRotation;
@@ -129,6 +145,8 @@ public class PlayerController : MonoBehaviour
     private Coroutine enterOrbitCoroutine;
     private IEnumerator OnEnterOrbit()
     {
+        faceCamera = false;
+
         targVerticalSpin = cameraTransform.localEulerAngles.x;
 
         bodySwingAnim.ResetTrigger("SwingBack");
@@ -143,12 +161,18 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        Debug.DrawRay(transform.position, transform.forward * 1.6f / 2f, new Color(1, 0, 0), 5f);
-        Debug.DrawRay(cameraTransform.position, cameraTransform.forward * 1.5f / 2f, new Color(0, 1, 0), 5f);
+        // Debug.DrawRay(transform.position, transform.forward * 1.6f / 2f, new Color(1, 0, 0), 5f);
+        // Debug.DrawRay(cameraTransform.position, cameraTransform.forward * 1.5f / 2f, new Color(0, 1, 0), 5f);
 
         #region Calculate net Gravity dir
         float preGravMagnitude = currNetGrav_Global.magnitude;
         currNetGrav_Global = PlanetTracker.Instance.GetNetGravityDir(transform.position);
+
+        float gravMagnitudeCutoffForLerp;
+        if (useDebugLerpCutoff)
+            gravMagnitudeCutoffForLerp = gravMagnitudeCutoffForLerp_DEBUG;
+        else
+            gravMagnitudeCutoffForLerp = gravMagnitudeCutoffForLerp_Normal;
 
         bool newInOrbit;
         if (currNetGrav_Global.magnitude >= gravMagnitudeCutoffForLerp)
@@ -158,6 +182,8 @@ public class PlayerController : MonoBehaviour
 
         if (inOrbit && newInOrbit == false)
         {
+            inOrbit = newInOrbit;
+
             //Exit orbit
             if (enterOrbitCoroutine != null)
                 StopCoroutine(enterOrbitCoroutine);
@@ -167,19 +193,24 @@ public class PlayerController : MonoBehaviour
             //Start exit coroutine
             exitOrbitCoroutine = StartCoroutine(OnExitOrbit());
         }
-        else if (inOrbit == false && newInOrbit)
+        else
         {
-            //Enter orbit
-            if (enterOrbitCoroutine != null)
-                StopCoroutine(enterOrbitCoroutine);
-            if (exitOrbitCoroutine != null)
-                StopCoroutine(exitOrbitCoroutine);
+            if (inOrbit == false && newInOrbit)
+            {
+                inOrbit = newInOrbit;
 
-            //Start enter coroutine
-            enterOrbitCoroutine = StartCoroutine(OnEnterOrbit());
+                //Enter orbit
+                if (enterOrbitCoroutine != null)
+                    StopCoroutine(enterOrbitCoroutine);
+                if (exitOrbitCoroutine != null)
+                    StopCoroutine(exitOrbitCoroutine);
+
+                //Start enter coroutine
+                enterOrbitCoroutine = StartCoroutine(OnEnterOrbit());
+            }
+            else
+                inOrbit = newInOrbit;
         }
-
-        inOrbit = newInOrbit;
 
         //Debug.DrawRay(transform.position, currNetGrav_Global, Color.red, 0.5f);
         #endregion
@@ -210,8 +241,6 @@ public class PlayerController : MonoBehaviour
         }
         else //no rays hit the ground, so player is not grounded
         {
-            grounded = false;
-
             if (inOrbit)
             {
                 //Gravity strong enough to lerp
@@ -335,7 +364,7 @@ public class PlayerController : MonoBehaviour
         }
         #endregion
 
-        Debug.DrawRay(transform.position, transform.forward * 1.2f / 2f, new Color(1, 1, 0), 5f);
-        Debug.DrawRay(cameraTransform.position, cameraTransform.forward * 1.1f / 2f, new Color(0.25f, 0, 1), 5f);
+        // Debug.DrawRay(transform.position, transform.forward * 1.2f / 2f, new Color(1, 1, 0), 5f);
+        // Debug.DrawRay(cameraTransform.position, cameraTransform.forward * 1.1f / 2f, new Color(0.25f, 0, 1), 5f);
     }
 }
